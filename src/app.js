@@ -1,25 +1,14 @@
 import express from "express";
+import db from "./config/db.js";
+import routes from "./routes/index.js";
+
+db.on("error", console.log.bind(console, "Error connection"));
+db.once("open", () => {
+  console.log("Connection OK with the DB");
+});
 
 const app = express();
+app.use(express.json());
+routes(app);
 
-app.use(express.json())
-
-const books = [
-    {id: 1, "name": "Harry Potter"},
-    {id: 2, "name": "Atomic Habits"}
-]
-app.get('/', (req, res)=> {
-res.status(200).send('Library');
-})
-
-app.get('/books', (req, res)=> {
-    res.status(200).json(books)
-})
-
-app.post('/books', (req, res)=>{
-    books.push(req.body);
-    res.status(201).send('Book added succefully')
-})
-
-
-export default app
+export default app;
